@@ -10,25 +10,26 @@ namespace Module3HW5
         private const string _worldFilePath = "world.txt";
         public static void Main(string[] args)
         {
-            var textTask = Run();
+            var textTask = RunAsync();
             Console.WriteLine(textTask.Result);
         }
 
-        public static async Task<string> ReadHello(string helloFilePath)
+        public static async Task<string> ReadHelloAsync(string helloFilePath)
         {
             return await Task.Run(() => File.ReadAllText(helloFilePath));
         }
 
-        public static async Task<string> ReadWorld(string worldFilePath)
+        public static async Task<string> ReadWorldAsync(string worldFilePath)
         {
             return await Task.Run(() => File.ReadAllText(worldFilePath));
         }
 
-        public static async Task<string> Run()
+        public static async Task<string> RunAsync()
         {
-            var helloText = await ReadHello(_helloFilePath);
-            var worldText = await ReadWorld(_worldFilePath);
-            return $"{helloText} {worldText}";
+            var task1 = ReadHelloAsync(_helloFilePath);
+            var task2 = ReadWorldAsync(_worldFilePath);
+            var result = await Task.WhenAll(task1, task2);
+            return string.Join(" ", result);
         }
     }
 }
